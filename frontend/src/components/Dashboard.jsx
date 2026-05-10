@@ -43,7 +43,7 @@ const Dashboard = ({ onStartFocus, onOpenUpload }) => {
           </div>
           <div className="w-px h-6 bg-white/10" />
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-sm text-white shadow-lg">
-            A
+            U
           </div>
         </div>
       </header>
@@ -64,7 +64,7 @@ const Dashboard = ({ onStartFocus, onOpenUpload }) => {
               </div>
               
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                You're on a roll, Aju! 🌊
+                You're on a roll, Student! 🌊
               </h2>
               <p className="text-text-muted text-lg mb-8 max-w-md">
                 Your momentum is high. Just 2 minutes to keep your streak alive today.

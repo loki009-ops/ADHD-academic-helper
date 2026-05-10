@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Zap, CheckCircle2 } from 'lucide-react';
 
 const FocusMode = ({ onExit }) => {
-  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes
+  const [timeLeft, setTimeLeft] = useState(60); // 1 minute
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
 

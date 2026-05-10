@@ -92,4 +92,14 @@ def generate_micro_lessons_from_text(text: str):
         return []
     except Exception as e:
         print(f"LLM Generation Error for Lessons: {e}")
-        return []
+        # Fallback for demonstration if model is unreachable
+        return [
+            {
+                "title": "Mock Lesson: Introduction",
+                "reading": ["This is a fallback paragraph generated because the LLM API is not configured yet. It demonstrates that the PDF was processed.", "You can add the real API later."],
+                "question": "Why did you receive this mock lesson?",
+                "options": ["The API is not set up", "The PDF was blank", "There is a bug", "I answered correctly"],
+                "correctAnswer": 0,
+                "explanation": "This is a fallback response provided by the system when the LLM is not reachable."
+            }
+        ]
