@@ -11,6 +11,7 @@ import UploadModal from './components/UploadModal';
 function App() {
   const [currentView, setCurrentView] = useState('landing'); // landing, auth, recovery, energy, dashboard, momentum
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [globalXp, setGlobalXp] = useState(1250);
 
   // Simulating a condition for returning users
   const isReturningAfterLongBreak = true; 
@@ -46,13 +47,19 @@ function App() {
         {currentView === 'dashboard' && (
           <Dashboard 
             key="dashboard"
+            globalXp={globalXp}
             onStartFocus={() => setCurrentView('momentum')} 
             onOpenUpload={() => setIsUploadOpen(true)} 
           />
         )}
 
         {currentView === 'momentum' && (
-          <MomentumMode key="momentum" onExit={() => setCurrentView('dashboard')} />
+          <MomentumMode 
+            key="momentum" 
+            globalXp={globalXp} 
+            setGlobalXp={setGlobalXp} 
+            onExit={() => setCurrentView('dashboard')} 
+          />
         )}
       </AnimatePresence>
 

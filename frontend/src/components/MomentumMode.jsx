@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pause, Play, X, HeartHandshake, Coffee, Check, Zap, SkipForward, ArrowRight } from 'lucide-react';
+import { Pause, Play, X, HeartHandshake, Coffee, Check, Zap, SkipForward, ArrowRight, Trophy } from 'lucide-react';
 
 const fallbackLessons = [
   {
@@ -205,7 +205,7 @@ const fallbackLessons = [
   }
 ];
 
-const MomentumMode = ({ onExit }) => {
+const MomentumMode = ({ onExit, globalXp = 1250, setGlobalXp }) => {
   const [dbLessons, setDbLessons] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
@@ -214,7 +214,6 @@ const MomentumMode = ({ onExit }) => {
   const [taskState, setTaskState] = useState('reading'); // reading, quiz, success
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [earnedXp, setEarnedXp] = useState(50);
-  const [totalXp, setTotalXp] = useState(1250);
 
   useEffect(() => {
     fetch('http://localhost:8000/api/lessons')
@@ -256,7 +255,7 @@ const MomentumMode = ({ onExit }) => {
     setSelectedAnswer(idx);
     
     if (idx === currentLesson.correctAnswer) {
-      setTotalXp(prev => prev + earnedXp);
+      if (setGlobalXp) setGlobalXp(prev => prev + earnedXp);
       setTimeout(() => {
         setTaskState('success');
       }, 1000);
@@ -270,12 +269,16 @@ const MomentumMode = ({ onExit }) => {
   };
 
   const nextTask = () => {
-    setCurrentLessonIndex(prev => prev + 1);
-    setTaskState('reading');
-    setSelectedAnswer(null);
-    setTimeLeft(120);
-    setIsActive(true);
-    setEarnedXp(50);
+    if (currentLessonIndex + 1 >= activeLessons.length) {
+      setTaskState('summary');
+    } else {
+      setCurrentLessonIndex(prev => prev + 1);
+      setTaskState('reading');
+      setSelectedAnswer(null);
+      setTimeLeft(120);
+      setIsActive(true);
+      setEarnedXp(50);
+    }
   };
 
   return (
@@ -299,7 +302,7 @@ const MomentumMode = ({ onExit }) => {
         </div>
 
         <div className="glass-panel px-4 py-2 rounded-xl flex items-center gap-2 text-warning border border-warning/20">
-          <Zap size={16} /> <span className="font-bold">{totalXp} XP</span>
+          <Zap size={16} /> <span className="font-bold">{globalXp} XP</span>
         </div>
       </header>
 
@@ -420,6 +423,39 @@ const MomentumMode = ({ onExit }) => {
                 className="bg-primary hover:bg-primary-hover text-white px-10 py-5 rounded-2xl font-bold text-xl transition-all glow-primary hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
               >
                 Next Micro Mission <ArrowRight size={24} />
+              </button>
+            </motion.div>
+          )}
+
+          {/* SUMMARY STATE */}
+          {taskState === 'summary' && (
+            <motion.div
+              key="summary"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.2 }}
+              className="flex flex-col items-center text-center"
+            >
+              <div className="relative">
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", bounce: 0.5 }}
+                  className="w-32 h-32 bg-primary rounded-full flex items-center justify-center glow-primary mb-8 relative z-10"
+                >
+                  <Trophy size={64} className="text-white" />
+                </motion.div>
+                <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl animate-ping" />
+              </div>
+              
+              <h2 className="text-5xl font-black text-white mb-4">Session Complete!</h2>
+              <p className="text-xl text-text-muted mb-12">You've completed all missions and now have a total of <span className="text-warning font-bold">{globalXp} XP</span>.</p>
+              
+              <button 
+                onClick={onExit}
+                className="bg-primary hover:bg-primary-hover text-white px-10 py-5 rounded-2xl font-bold text-xl transition-all glow-primary hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+              >
+                Return to Dashboard <ArrowRight size={24} />
               </button>
             </motion.div>
           )}

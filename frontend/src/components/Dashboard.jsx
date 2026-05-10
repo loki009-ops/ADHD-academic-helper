@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BrainCircuit, Play, Zap, Flame, Target, Trophy, Clock, ArrowRight, Library, Sparkles } from 'lucide-react';
 
-const Dashboard = ({ onStartFocus, onOpenUpload }) => {
+const Dashboard = ({ onStartFocus, onOpenUpload, globalXp = 1250 }) => {
   const [missions, setMissions] = useState([
     { id: 1, title: "Water Cycle Quick Win", time: "2 mins", xp: 50, type: "⚡ Quick Win", completed: false, energy: "Low" },
     { id: 2, title: "Photosynthesis Deep Dive", time: "5 mins", xp: 120, type: "🧠 Deep Focus", completed: false, energy: "High" },
@@ -39,7 +39,7 @@ const Dashboard = ({ onStartFocus, onOpenUpload }) => {
           <div className="w-px h-6 bg-white/10" />
           <div className="flex items-center gap-2">
             <Trophy size={20} className="text-warning" />
-            <span className="font-bold text-white">1,250<span className="text-text-muted text-xs ml-1">xp</span></span>
+            <span className="font-bold text-white">{globalXp.toLocaleString()}<span className="text-text-muted text-xs ml-1">xp</span></span>
           </div>
           <div className="w-px h-6 bg-white/10" />
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-sm text-white shadow-lg">
