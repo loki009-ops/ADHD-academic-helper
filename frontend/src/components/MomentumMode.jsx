@@ -214,6 +214,7 @@ const MomentumMode = ({ onExit }) => {
   const [taskState, setTaskState] = useState('reading'); // reading, quiz, success
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [earnedXp, setEarnedXp] = useState(50);
+  const [totalXp, setTotalXp] = useState(1250);
 
   useEffect(() => {
     fetch('http://localhost:8000/api/lessons')
@@ -230,7 +231,7 @@ const MomentumMode = ({ onExit }) => {
       });
   }, []);
 
-  const activeLessons = dbLessons.length > 0 ? dbLessons : fallbackLessons;
+  const activeLessons = dbLessons.length > 0 ? dbLessons : fallbackLessons.slice(0, 10);
   const currentLesson = activeLessons[currentLessonIndex % activeLessons.length];
 
   useEffect(() => {
@@ -255,12 +256,13 @@ const MomentumMode = ({ onExit }) => {
     setSelectedAnswer(idx);
     
     if (idx === currentLesson.correctAnswer) {
+      setTotalXp(prev => prev + earnedXp);
       setTimeout(() => {
         setTaskState('success');
       }, 1000);
     } else {
-      // Small penalty or feedback for wrong answer
-      setEarnedXp(prev => Math.max(10, prev - 10)); // Deduct 10 XP
+      // Increased penalty for wrong answer
+      setEarnedXp(prev => Math.max(0, prev - 25)); // Deduct 25 XP
       setTimeout(() => {
         setSelectedAnswer(null);
       }, 800);
@@ -296,7 +298,9 @@ const MomentumMode = ({ onExit }) => {
           <span className="font-bold tracking-widest text-white uppercase text-sm">Momentum Mode</span>
         </div>
 
-        <div className="w-12 h-12" /> {/* Spacer */}
+        <div className="glass-panel px-4 py-2 rounded-xl flex items-center gap-2 text-warning border border-warning/20">
+          <Zap size={16} /> <span className="font-bold">{totalXp} XP</span>
+        </div>
       </header>
 
       {/* Main Content Area */}
